@@ -1,10 +1,15 @@
 Revision history for Data-Format-Pretty-YAML
 
-0.02     2012-03-29
+0.03     2012-11-16 (SHARYANTO)
+
+         Yay, now use YAML::Tiny::Color when interactive.
+
+
+0.02     2012-03-29 (SHARYANTO)
 
          Add content_type().
 
 
-0.01     2011-08-11
+0.01     2011-08-11 (SHARYANTO)
 
          - First release.
