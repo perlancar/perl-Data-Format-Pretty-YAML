@@ -4,8 +4,6 @@ use 5.010;
 use strict;
 use warnings;
 
-use YAML::Syck;
-
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(format_pretty);
@@ -18,10 +16,17 @@ sub format_pretty {
     my ($data, $opts) = @_;
     $opts //= {};
 
-    local $YAML::Syck::ImplicitTyping = 1;
-    local $YAML::Syck::SortKeys       = 1;
-    local $YAML::Syck::Headless       = 1;
-    Dump($data);
+    if ($opts->{color} // (-t STDOUT)) {
+        require YAML::Tiny::Color;
+        local $YAML::Tiny::Color::LineNumber = 1;
+        YAML::Tiny::Color::Dump($data);
+    } else {
+        require YAML::Syck;
+        local $YAML::Syck::ImplicitTyping = 1;
+        local $YAML::Syck::SortKeys       = 1;
+        local $YAML::Syck::Headless       = 1;
+        YAML::Syck::Dump($data);
+    }
 }
 
 1;
@@ -60,6 +65,21 @@ YAML::Syck's settings are optimized for prettiness, currently as follows:
  $YAML::Syck::ImplicitTyping = 1;
  $YAML::Syck::SortKeys       = 1;
  $YAML::Syck::Headless       = 1;
+
+Options:
+
+=over
+
+=item * color => BOOL
+
+Whether to enable coloring. The default is the enable only when running
+interactively. Currently also enable line numbering.
+
+=back
+
+=head2 content_type() => STR
+
+Return C<text/yaml>.
 
 
 =head1 SEE ALSO
