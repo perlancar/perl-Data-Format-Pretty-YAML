@@ -16,7 +16,7 @@ sub format_pretty {
     my ($data, $opts) = @_;
     $opts //= {};
 
-    if ($opts->{color} // (-t STDOUT)) {
+    if ($opts->{color} // $ENV{COLOR} // (-t STDOUT)) {
         require YAML::Tiny::Color;
         local $YAML::Tiny::Color::LineNumber = 1;
         YAML::Tiny::Color::Dump($data);
@@ -80,6 +80,13 @@ interactively. Currently also enable line numbering.
 =head2 content_type() => STR
 
 Return C<text/yaml>.
+
+
+=head1 ENVIRONMENT
+
+=head2 COLOR => BOOL
+
+Set C<color> option (if unset).
 
 
 =head1 SEE ALSO
