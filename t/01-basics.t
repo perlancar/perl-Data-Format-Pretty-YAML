@@ -2,13 +2,13 @@
 use strict;
 
 use Data::Format::Pretty::YAML qw(format_pretty);
-use Test::More;
+use Test::More 0.98;
 
 test_format_pretty(
     name => 'default',
     data => {a=>1, b=>2},
     opts => {},
-    output_re => qr/^a: 1\nb: 2\n$/,
+    output_re => qr/a.*:.*1.*\n.*b.*:.*2/,
 );
 
 done_testing();
