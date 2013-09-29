@@ -1,6 +1,6 @@
 package Data::Format::Pretty::YAML;
 
-use 5.010;
+use 5.010001;
 use strict;
 use warnings;
 
@@ -16,22 +16,30 @@ sub format_pretty {
     my ($data, $opts) = @_;
     $opts //= {};
 
-    if ($opts->{color} // $ENV{COLOR} // (-t STDOUT)) {
+    my $pretty = $opts->{pretty} // 1;
+    my $linum  = $opts->{linum} // $ENV{LINUM} // $opts->{pretty};
+    my $color  = $opts->{color} // $ENV{COLOR} // (-t STDOUT);
+
+    if ($color) {
         require YAML::Tiny::Color;
-        local $YAML::Tiny::Color::LineNumber = 1;
+        local $YAML::Tiny::Color::LineNumber = $linum;
         YAML::Tiny::Color::Dump($data);
     } else {
         require YAML::Syck;
         local $YAML::Syck::ImplicitTyping = 1;
         local $YAML::Syck::SortKeys       = 1;
         local $YAML::Syck::Headless       = 1;
-        YAML::Syck::Dump($data);
+        if ($linum) {
+            require SHARYANTO::String::Util;
+            SHARYANTO::String::Util::linenum(YAML::Syck::Dump($data));
+        } else {
+            YAML::Syck::Dump($data);
+        }
     }
 }
 
 1;
 # ABSTRACT: Pretty-print data structure as YAML
-__END__
 
 =head1 SYNOPSIS
 
@@ -70,7 +78,17 @@ Options:
 
 =over
 
-=item * color => BOOL
+=item * color => BOOL (default: from env or 1)
+
+Whether to enable coloring. The default is the enable only when running
+interactively. Currently also enable line numbering.
+
+=item * pretty => BOOL (default: 1)
+
+Whether to focus on prettyness. If set to 0, will focus on producing valid YAML
+instead of prettiness. This affects default value for C<linum>.
+
+=item * linum => BOOL (default: 1 unless when pretty=0)
 
 Whether to enable coloring. The default is the enable only when running
 interactively. Currently also enable line numbering.
@@ -88,10 +106,13 @@ Return C<text/yaml>.
 
 Set C<color> option (if unset).
 
+=head2 LINUM => BOOL
+
+Set C<linum> option (if unset).
+
 
 =head1 SEE ALSO
 
 L<Data::Format::Pretty>
 
 =cut
-
