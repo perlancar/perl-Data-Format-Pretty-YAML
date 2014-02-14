@@ -16,9 +16,11 @@ sub format_pretty {
     my ($data, $opts) = @_;
     $opts //= {};
 
+    my $interactive = (-t STDOUT);
     my $pretty = $opts->{pretty} // 1;
-    my $linum  = $opts->{linum} // $ENV{LINUM} // $opts->{pretty};
-    my $color  = $opts->{color} // $ENV{COLOR} // (-t STDOUT);
+    my $color  = $opts->{color} // $ENV{COLOR} // $interactive //
+        $opts->{pretty};
+    my $linum  = $opts->{linum} // $ENV{LINUM} // 0;
 
     if ($color) {
         require YAML::Tiny::Color;
@@ -81,17 +83,16 @@ Options:
 =item * color => BOOL (default: from env or 1)
 
 Whether to enable coloring. The default is the enable only when running
-interactively. Currently also enable line numbering.
+interactively.
 
 =item * pretty => BOOL (default: 1)
 
 Whether to focus on prettyness. If set to 0, will focus on producing valid YAML
-instead of prettiness. This affects default value for C<linum>.
+instead of prettiness.
 
-=item * linum => BOOL (default: 1 unless when pretty=0)
+=item * linum => BOOL (default: from env or 0)
 
-Whether to enable coloring. The default is the enable only when running
-interactively. Currently also enable line numbering.
+Whether to enable line numbering.
 
 =back
 
@@ -109,6 +110,9 @@ Set C<color> option (if unset).
 =head2 LINUM => BOOL
 
 Set C<linum> option (if unset).
+
+
+=head1 FAQ
 
 
 =head1 SEE ALSO
