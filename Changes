@@ -1,5 +1,13 @@
 Revision history for Data-Format-Pretty-YAML
 
+0.08    2014-12-10 (PERLANCAR)
+
+	- No functional changes.
+
+	- Use new name of renamed/split module SHARYANTO::String::Util ->
+	  String::LineNumber.
+
+
 0.07    2014-02-14 (SHARYANTO)
 
 	- Change default of linum from 1 when pretty/interactive to 0 to avoid
