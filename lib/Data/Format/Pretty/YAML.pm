@@ -1,5 +1,8 @@
 package Data::Format::Pretty::YAML;
 
+# DATE
+# VERSION
+
 use 5.010001;
 use strict;
 use warnings;
@@ -7,8 +10,6 @@ use warnings;
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(format_pretty);
-
-# VERSION
 
 sub content_type { "text/yaml" }
 
@@ -32,8 +33,8 @@ sub format_pretty {
         local $YAML::Syck::SortKeys       = 1;
         local $YAML::Syck::Headless       = 1;
         if ($linum) {
-            require SHARYANTO::String::Util;
-            SHARYANTO::String::Util::linenum(YAML::Syck::Dump($data));
+            require String::LineNumber;
+            String::LineNumber::linenum(YAML::Syck::Dump($data));
         } else {
             YAML::Syck::Dump($data);
         }
